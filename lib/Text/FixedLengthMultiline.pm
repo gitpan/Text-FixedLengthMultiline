@@ -9,7 +9,7 @@ use strict;
 use Carp;
 
 BEGIN {
-    our $VERSION = '0.01';
+    our $VERSION = '0.02';
 }
 
 use constant FIRST => 1;
@@ -60,7 +60,8 @@ separated columns optionnaly on multiple lines.
 
 =head1 DESCRIPTION
 
-Data can span on multiple lines with text flowing in the same column space.
+A "logical line" can be splitted on multiple lines with text flowing in the
+same column space.
 
 =head1 FORMAT SPECIFICATION
 
@@ -82,15 +83,15 @@ A string that match this RE: /^(?#mandatory)!?(?#name)[:alnum:]\w*(?:(?#multi)~(
 
 =over
 
-=item -
+=item *
 
 C<!> means the column is mandatory
 
-=item -
+=item *
 
 C<name> is the column name. This will be the key for the hash after parsing.
 
-=item -
+=item *
 
 C<~> means the column data can be on multiple lines.
 
@@ -106,13 +107,17 @@ Arguments:
 
 =item *
 
-C<-format>
+C<format>: an array reference following the L<FORMAT SPECIFICATION>.
 
 =item *
 
-C<-debug>
+C<debug>
 
 =back
+
+Example:
+
+  my $format = new Text::FixedLengthMultiline(format => [ 2, col1 => 4, 1, '!col2' => 4 ]);
 
 =cut
 
@@ -144,17 +149,30 @@ sub new()
 
 =head1 METHODS
 
-=head2 parse_line($;$)
+=head2 C<parse_line($line, $hashref)>
+
+Parse a line of text and add parsed data to the hash.
+
+Multiple calls to C<parse_line()> with the same hashref may be needed to fully
+read a "logical line" in case some columns are multiline.
 
 Returns:
 
 =over
 
-=item C<-col>: Parse error
+=item *
 
-=item C<0>: OK
+C<-col>: Parse error. The value is a negative number indicating the
+character position in the line where the parse error occured.
 
-=item C<col>: Missing data: need to feed next line to fill remining columns
+=item *
+
+C<0>: OK
+
+=item *
+
+C<col>: Missing data: need to feed next line to fill remining columns.
+The value is the character position of the column where data is expected.
 
 =back
 
@@ -430,6 +448,13 @@ sub _build_continue_line_re($;@)
     return ();
 }
 
+=head2 C<get_first_line_re()>
+
+Returns a regular expression that matches the first line of a "logical line"
+of data.
+
+=cut
+
 sub get_first_line_re($)
 {
     my $self = shift;
@@ -446,6 +471,15 @@ sub get_first_line_re($)
     return $self->{FIRST_LINE_RE};
 }
 
+=head2 C<get_continue_line_re()>
+
+Returns a regular expression that matches the 2nd line and the following
+lines of a "logical line".
+
+Returns undef if the format specification does not contains any column that
+can be splitted on multiples lines.
+
+=cut
 
 # continue-style: first (only cont columns can appear on a continue line)
 sub get_continue_line_re($)
@@ -492,6 +526,12 @@ This module should have been named Text::FixedLengthMultilineFormat, but the
 current name is already long enough!
 
 =back
+
+=head1 HISTORY
+
+2005-09-26 0.02 Added documentation.
+
+2005-09-25 0.01 Initial release on CPAN.
 
 =head1 LICENSE
 

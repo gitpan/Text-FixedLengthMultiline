@@ -30,8 +30,8 @@ SYNOPSIS
       }
 
 DESCRIPTION
-    Data can span on multiple lines with text flowing in the same column
-    space.
+    A "logical line" can be splitted on multiple lines with text flowing in
+    the same column space.
 
 FORMAT SPECIFICATION
     The format is given at the contruction time as an array ref. Modifying
@@ -46,27 +46,52 @@ FORMAT SPECIFICATION
     *   A string that match this RE:
         /^(?#mandatory)!?(?#name)[:alnum:]\w*(?:(?#multi)~(?#cont).?)?$/
 
-        -   "!" means the column is mandatory
+        *   "!" means the column is mandatory
 
-        -   "name" is the column name. This will be the key for the hash
+        *   "name" is the column name. This will be the key for the hash
             after parsing.
 
-        -   "~" means the column data can be on multiple lines.
+        *   "~" means the column data can be on multiple lines.
 
 CONSTRUCTOR
     Arguments:
 
-    *   "-format"
+    *   "format": an array reference following the "FORMAT SPECIFICATION".
 
-    *   "-debug"
+    *   "debug"
+
+    Example:
+
+      my $format = new Text::FixedLengthMultiline(format => [ 2, col1 => 4, 1, '!col2' => 4 ]);
 
 METHODS
-  parse_line($;$)
+  "parse_line($line, $hashref)"
+    Parse a line of text and add parsed data to the hash.
+
+    Multiple calls to "parse_line()" with the same hashref may be needed to
+    fully read a "logical line" in case some columns are multiline.
+
     Returns:
 
-    "-col": Parse error
-    0: OK
-    "col": Missing data: need to feed next line to fill remining columns
+    *   "-col": Parse error. The value is a negative number indicating the
+        character position in the line where the parse error occured.
+
+    *   0: OK
+
+    *   "col": Missing data: need to feed next line to fill remining
+        columns. The value is the character position of the column where
+        data is expected.
+
+  "get_first_line_re()"
+    Returns a regular expression that matches the first line of a "logical
+    line" of data.
+
+  "get_continue_line_re()"
+    Returns a regular expression that matches the 2nd line and the following
+    lines of a "logical line".
+
+    Returns undef if the format specification does not contains any column
+    that can be splitted on multiples lines.
 
 TODO
     *   "format()"
@@ -78,6 +103,11 @@ TODO
 BUGS
     *   This module should have been named Text::FixedLengthMultilineFormat,
         but the current name is already long enough!
+
+HISTORY
+    2005-09-26 0.02 Added documentation.
+
+    2005-09-25 0.01 Initial release on CPAN.
 
 LICENSE
     Copyright (c) 2005 Olivier Mengué. All rights reserved.
