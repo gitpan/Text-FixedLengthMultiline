@@ -1,0 +1,16 @@
+--- #YAML:1.0
+name: Text-FixedLengthMultiline
+version: 0.01
+author:
+  - Olivier Mengue <dolmen@cpan.org>
+abstract: |-
+  Parse text data formatted in space
+  separated columns optionnaly on multiple lines.
+license: perl
+requires:
+  perl: 5.6.0
+provides:
+  Text::FixedLengthMultiline:
+    file: lib/Text/FixedLengthMultiline.pm
+    version: 0.01
+generated_by: Module::Build version 0.26

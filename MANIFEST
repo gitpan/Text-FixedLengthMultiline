@@ -1,0 +1,9 @@
+Build.PL
+lib/Text/FixedLengthMultiline.pm
+MANIFEST			This list of files
+META.yml
+README
+t/01new.t
+t/02parse.t
+t/03re.t
+t/04sample.t
