@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Text-FixedLengthMultiline
-version: 0.02
+version: 0.03
 author:
   - Olivier Mengue <dolmen@cpan.org>
 abstract: |-
@@ -12,5 +12,5 @@ requires:
 provides:
   Text::FixedLengthMultiline:
     file: lib/Text/FixedLengthMultiline.pm
-    version: 0.02
+    version: 0.03
 generated_by: Module::Build version 0.26

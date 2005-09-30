@@ -9,7 +9,7 @@ use strict;
 use Carp;
 
 BEGIN {
-    our $VERSION = '0.02';
+    our $VERSION = '0.03';
 }
 
 use constant FIRST => 1;
@@ -35,10 +35,12 @@ separated columns optionnaly on multiple lines.
   use Text::FixedLengthMultiline;
 
   my $fmt = Text::FixedLengthMultiline->new(format => ['!name' => 10, 1, 'comment~' => 20, 1, 'age' => -2 ]);
+
   # Compute the RegExp that matches the first line
   my $first_line_re = $fmt->get_first_line_re();
   # Compute the RegExp that matches a continuation line
   my $continue_line_re = $fmt->get_continue_line_re();
+
   #234567890 12345678901234567890 12
   my $text = <<EOT;
   Alice      Pretty girl!
@@ -48,6 +50,7 @@ separated columns optionnaly on multiple lines.
              or Wally. Where's
              he?
   EOT
+
   my @data;
   my $err;
   while ($text =~ /^([^\n]+)$/gm) {
@@ -60,8 +63,8 @@ separated columns optionnaly on multiple lines.
 
 =head1 DESCRIPTION
 
-A "logical line" can be splitted on multiple lines with text flowing in the
-same column space.
+A row of data can be splitted on multiple lines of text with cell content
+flowing in the same column space.
 
 =head1 FORMAT SPECIFICATION
 
@@ -149,9 +152,42 @@ sub new()
 
 =head1 METHODS
 
+=head2 C<parse_table($text)>
+
+Parse a table.
+
+  my @table = $fmt->parse_table($text);
+
+Returns an array of hashes. Each hash is a row of data.
+
+=cut
+
+sub parse_table($)
+{
+    my ($self, $text) = @_;
+    my $first_re = $self->get_first_line_re();
+    my @table;
+    my $err;
+    my $linenum = 1;
+    (pos $text) = 0;
+    while ($text =~ /^([^\n]+)$/gm) {
+        my $line = $1;
+        push @table, {} if $line =~ $first_re;
+        if (($err = $self->parse_line($line, $table[$#table])) > 0) {
+            croak "Parse error at line $linenum, column $err";
+        }
+    }
+    return @table;
+}
+
+
+
+
 =head2 C<parse_line($line, $hashref)>
 
 Parse a line of text and add parsed data to the hash.
+
+  my $error = $fmt->parse_line($line, \%row_data);
 
 Multiple calls to C<parse_line()> with the same hashref may be needed to fully
 read a "logical line" in case some columns are multiline.
@@ -162,7 +198,7 @@ Returns:
 
 =item *
 
-C<-col>: Parse error. The value is a negative number indicating the
+C<-col>: Parse error. The value is a negative integer indicating the
 character position in the line where the parse error occured.
 
 =item *
@@ -241,6 +277,9 @@ sub parse_line($;$)
     return -$col unless $line =~ /^ *$/;
     return $ret;
 }
+
+
+
 
 sub _dump_line_re()
 {
@@ -453,6 +492,8 @@ sub _build_continue_line_re($;@)
 Returns a regular expression that matches the first line of a "logical line"
 of data.
 
+  my $re = $fmt->get_first_line_re();
+
 =cut
 
 sub get_first_line_re($)
@@ -475,6 +516,8 @@ sub get_first_line_re($)
 
 Returns a regular expression that matches the 2nd line and the following
 lines of a "logical line".
+
+  my $re = $fmt->get_continue_line_re();
 
 Returns undef if the format specification does not contains any column that
 can be splitted on multiples lines.
@@ -529,6 +572,8 @@ current name is already long enough!
 
 =head1 HISTORY
 
+2005-09-30 0.03 Added C<parse_table()> method.
+
 2005-09-26 0.02 Added documentation.
 
 2005-09-25 0.01 Initial release on CPAN.
@@ -545,7 +590,7 @@ Olivier Mengué, <dolmen@cpan.org>
 
 =head1 SEE ALSO
 
-Related modules I found on L<CPAN|http://search.cpan.org>:
+Related modules I found on CPAN:
 
 =over
 

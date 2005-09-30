@@ -6,10 +6,12 @@ SYNOPSIS
       use Text::FixedLengthMultiline;
 
       my $fmt = Text::FixedLengthMultiline->new(format => ['!name' => 10, 1, 'comment~' => 20, 1, 'age' => -2 ]);
+
       # Compute the RegExp that matches the first line
       my $first_line_re = $fmt->get_first_line_re();
       # Compute the RegExp that matches a continuation line
       my $continue_line_re = $fmt->get_continue_line_re();
+
       #234567890 12345678901234567890 12
       my $text = <<EOT;
       Alice      Pretty girl!
@@ -19,6 +21,7 @@ SYNOPSIS
                  or Wally. Where's
                  he?
       EOT
+
       my @data;
       my $err;
       while ($text =~ /^([^\n]+)$/gm) {
@@ -30,8 +33,8 @@ SYNOPSIS
       }
 
 DESCRIPTION
-    A "logical line" can be splitted on multiple lines with text flowing in
-    the same column space.
+    A row of data can be splitted on multiple lines of text with cell
+    content flowing in the same column space.
 
 FORMAT SPECIFICATION
     The format is given at the contruction time as an array ref. Modifying
@@ -65,15 +68,24 @@ CONSTRUCTOR
       my $format = new Text::FixedLengthMultiline(format => [ 2, col1 => 4, 1, '!col2' => 4 ]);
 
 METHODS
+  "parse_table($text)"
+    Parse a table.
+
+      my @table = $fmt->parse_table($text);
+
+    Returns an array of hashes. Each hash is a row of data.
+
   "parse_line($line, $hashref)"
     Parse a line of text and add parsed data to the hash.
+
+      my $error = $fmt->parse_line($line, \%row_data);
 
     Multiple calls to "parse_line()" with the same hashref may be needed to
     fully read a "logical line" in case some columns are multiline.
 
     Returns:
 
-    *   "-col": Parse error. The value is a negative number indicating the
+    *   "-col": Parse error. The value is a negative integer indicating the
         character position in the line where the parse error occured.
 
     *   0: OK
@@ -86,9 +98,13 @@ METHODS
     Returns a regular expression that matches the first line of a "logical
     line" of data.
 
+      my $re = $fmt->get_first_line_re();
+
   "get_continue_line_re()"
     Returns a regular expression that matches the 2nd line and the following
     lines of a "logical line".
+
+      my $re = $fmt->get_continue_line_re();
 
     Returns undef if the format specification does not contains any column
     that can be splitted on multiples lines.
@@ -105,6 +121,8 @@ BUGS
         but the current name is already long enough!
 
 HISTORY
+    2005-09-30 0.03 Added "parse_table()" method.
+
     2005-09-26 0.02 Added documentation.
 
     2005-09-25 0.01 Initial release on CPAN.
