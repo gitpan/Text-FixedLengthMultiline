@@ -9,7 +9,7 @@ use strict;
 use Carp;
 
 BEGIN {
-    our $VERSION = '0.03';
+    our $VERSION = '0.04';
 }
 
 use constant FIRST => 1;
@@ -571,6 +571,8 @@ current name is already long enough!
 =back
 
 =head1 HISTORY
+
+2007-03-15 0.04 Removed debug statement. Thanks to Paulo Edgar Castro.
 
 2005-09-30 0.03 Added C<parse_table()> method.
 

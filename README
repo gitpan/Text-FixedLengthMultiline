@@ -121,6 +121,8 @@ BUGS
         but the current name is already long enough!
 
 HISTORY
+    2007-03-15 0.04 Removed debug statement. Thanks to Paulo Edgar Castro.
+
     2005-09-30 0.03 Added "parse_table()" method.
 
     2005-09-26 0.02 Added documentation.
