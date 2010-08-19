@@ -5,13 +5,6 @@ NAME
 SYNOPSIS
       use Text::FixedLengthMultiline;
 
-      my $fmt = Text::FixedLengthMultiline->new(format => ['!name' => 10, 1, 'comment~' => 20, 1, 'age' => -2 ]);
-
-      # Compute the RegExp that matches the first line
-      my $first_line_re = $fmt->get_first_line_re();
-      # Compute the RegExp that matches a continuation line
-      my $continue_line_re = $fmt->get_continue_line_re();
-
       #234567890 12345678901234567890 12
       my $text = <<EOT;
       Alice      Pretty girl!
@@ -21,6 +14,13 @@ SYNOPSIS
                  or Wally. Where's
                  he?
       EOT
+
+      my $fmt = Text::FixedLengthMultiline->new(format => ['!name' => 10, 1, 'comment~' => 20, 1, 'age' => -2 ]);
+
+      # Compute the RegExp that matches the first line
+      my $first_line_re = $fmt->get_first_line_re();
+      # Compute the RegExp that matches a continuation line
+      my $continue_line_re = $fmt->get_continue_line_re();
 
       my @data;
       my $err;
@@ -56,7 +56,8 @@ FORMAT SPECIFICATION
 
         *   "~" means the column data can be on multiple lines.
 
-CONSTRUCTOR
+METHODS
+  new()
     Arguments:
 
     *   "format": an array reference following the "FORMAT SPECIFICATION".
@@ -65,9 +66,8 @@ CONSTRUCTOR
 
     Example:
 
-      my $format = new Text::FixedLengthMultiline(format => [ 2, col1 => 4, 1, '!col2' => 4 ]);
+      my $format = Text::FixedLengthMultiline->new(format => [ 2, col1 => 4, 1, '!col2' => 4 ]);
 
-METHODS
   "parse_table($text)"
     Parse a table.
 
@@ -120,17 +120,30 @@ BUGS
     *   This module should have been named Text::FixedLengthMultilineFormat,
         but the current name is already long enough!
 
-HISTORY
-    2007-03-15 0.04 Removed debug statement. Thanks to Paulo Edgar Castro.
+SUPPORT
+    You can look for information at:
 
-    2005-09-30 0.03 Added "parse_table()" method.
+    *   RT: CPAN's request tracker
 
-    2005-09-26 0.02 Added documentation.
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Text-FixedLengthMultiline>
+        : post bug report there.
 
-    2005-09-25 0.01 Initial release on CPAN.
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/p/Text-FixedLengthMultline>: if you use
+        this distibution, please add comments on your experience for other
+        users.
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/Text-FixedLengthMultiline/>
+
+    *   AnnoCPAN: Annotated CPAN documentation
+
+        <http://annocpan.org/dist/Text-FixedLengthMultiline>
 
 LICENSE
-    Copyright (c) 2005 Olivier Mengué. All rights reserved.
+    Copyright (c) 2005-2010 Olivier Mengué. All rights reserved.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.

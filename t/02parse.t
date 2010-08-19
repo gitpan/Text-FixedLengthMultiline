@@ -2,7 +2,9 @@
 
 use strict;
 use warnings;
-use Test::More tests => 60;
+use Test::More tests => 61;
+use Test::NoWarnings;
+
 BEGIN { use_ok('Text::FixedLengthMultiline'); }
 
 my $fmt;
@@ -15,7 +17,7 @@ sub new_fmt()
     # Set the global variables
     undef $fmt;
     undef %data;
-    $fmt = new Text::FixedLengthMultiline(@_);
+    $fmt = Text::FixedLengthMultiline->new(@_);
     isa_ok($fmt, 'Text::FixedLengthMultiline', 'Line '.(caller)[2]);
     return $fmt;
 }

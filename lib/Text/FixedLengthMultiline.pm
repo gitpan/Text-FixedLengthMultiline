@@ -9,7 +9,7 @@ use strict;
 use Carp;
 
 BEGIN {
-    our $VERSION = '0.04';
+    our $VERSION = '0.05';
 }
 
 use constant FIRST => 1;
@@ -27,19 +27,11 @@ my %continue_styles = (
 
 =head1 NAME
 
-Text::FixedLengthMultiline - Parse text data formatted in space
-separated columns optionnaly on multiple lines.
+Text::FixedLengthMultiline - Parse text data formatted in space separated columns optionnaly on multiple lines.
 
 =head1 SYNOPSIS
 
   use Text::FixedLengthMultiline;
-
-  my $fmt = Text::FixedLengthMultiline->new(format => ['!name' => 10, 1, 'comment~' => 20, 1, 'age' => -2 ]);
-
-  # Compute the RegExp that matches the first line
-  my $first_line_re = $fmt->get_first_line_re();
-  # Compute the RegExp that matches a continuation line
-  my $continue_line_re = $fmt->get_continue_line_re();
 
   #234567890 12345678901234567890 12
   my $text = <<EOT;
@@ -50,6 +42,13 @@ separated columns optionnaly on multiple lines.
              or Wally. Where's
              he?
   EOT
+
+  my $fmt = Text::FixedLengthMultiline->new(format => ['!name' => 10, 1, 'comment~' => 20, 1, 'age' => -2 ]);
+
+  # Compute the RegExp that matches the first line
+  my $first_line_re = $fmt->get_first_line_re();
+  # Compute the RegExp that matches a continuation line
+  my $continue_line_re = $fmt->get_continue_line_re();
 
   my @data;
   my $err;
@@ -102,7 +101,9 @@ C<~> means the column data can be on multiple lines.
 
 =back
 
-=head1 CONSTRUCTOR
+=head1 METHODS
+
+=head2 new()
 
 Arguments:
 
@@ -120,12 +121,12 @@ C<debug>
 
 Example:
 
-  my $format = new Text::FixedLengthMultiline(format => [ 2, col1 => 4, 1, '!col2' => 4 ]);
+  my $format = Text::FixedLengthMultiline->new(format => [ 2, col1 => 4, 1, '!col2' => 4 ]);
 
 =cut
 
 # TODO add 'continue-style': first/last/any
-sub new()
+sub new
 {
     my $class = shift;
     my %params = @_;
@@ -150,7 +151,6 @@ sub new()
     return $self;
 }
 
-=head1 METHODS
 
 =head2 C<parse_table($text)>
 
@@ -162,7 +162,7 @@ Returns an array of hashes. Each hash is a row of data.
 
 =cut
 
-sub parse_table($)
+sub parse_table
 {
     my ($self, $text) = @_;
     my $first_re = $self->get_first_line_re();
@@ -215,7 +215,7 @@ The value is the character position of the column where data is expected.
 =cut
 
 # TODO: return a RE in case of missing data
-sub parse_line($;$)
+sub parse_line
 {
     my ($self, $line, $data) = @_;
     my @fmt = @{$self->{FORMAT}};
@@ -231,16 +231,6 @@ sub parse_line($;$)
 	    $line =~ /^( {0,$f})/;
 	    $data_len = length $1;
 	    return -($col+$data_len) if $data_len < $f;
-=cut
-	    if (length $line < $f) {
-		$data_len = length $line;
-	       	return -(defined $1 ? $col+length $1 : $col) unless $line =~ /^( *)$/;
-	    } else {
-		$line =~ /^( {0,$f})/;
-		$data_len = length $1;
-		return -($col+$data_len) if $data_len < $f;
-	    }
-=cut
 	} elsif ($f =~ /^(!?)([A-Za-z_]\w*)(?:(~)(.?))?$/) {
 	    my ($mandatory, $field, $multi, $cont) = ($1, $2, $3, $4);
 	    $multi = 0 unless defined $multi;
@@ -289,7 +279,7 @@ sub _dump_line_re()
     }
 }
 
-sub _serialize_line_re(@)
+sub _serialize_line_re()
 {
     #&_dump_line_re(@_);
     my $re = '';
@@ -347,7 +337,7 @@ sub _build_repetition_re($;$;$)
     return $c;
 }
 
-sub _build_column_re($;%)
+sub _build_column_re
 {
     my $self = shift;
     my %def = @_;
@@ -358,19 +348,6 @@ sub _build_column_re($;%)
     my ($re_col_mand, $re_col_end, $re_col);
     if ($def{mandatory} || $branch_multi) {
 	$re_col_mand = $re_spaces . $re_label;
-=cut
-	if ($width > 1) {
-	    $re_col =         '.' . ($width > 2 ? '{'.   ($width-1) .'}'  : '' );
-	    if ($def{align} eq 'L') { # Left aligned
-		$re_col_end = '.' . ($width > 2 ? '{0,'. ($width-1) .'}'  : '?');
-	    } else {         # Right aligned
-		$re_col_mand .= $re_col;
-		$re_col_end = $re_col = '';
-	    }
-	} else {
-	    $re_col_end = $re_col = '';
-	}
-=cut
 	if ($def{align} eq 'L') { # Left aligned
 	    $re_col_end =   &_build_repetition_re('.', 0,        $width-1);
 	    unless ($branch_multi) {
@@ -412,7 +389,7 @@ sub _has_multi(@)
 # @_ is the format
 # TODO handle the case where all columns are optionnal
 # The RE is then the union of the cases where one of the colmuns, up to the first multi, is mandatory
-sub _build_first_line_re($;@)
+sub _build_first_line_re
 {
     my $self = shift;
     my $branch_multi = shift;
@@ -456,7 +433,7 @@ sub _build_first_line_re($;@)
     return @re;
 }
 
-sub _build_continue_line_re($;@)
+sub _build_continue_line_re
 {
     my $self = shift;
     my $spaces = 0;
@@ -496,7 +473,7 @@ of data.
 
 =cut
 
-sub get_first_line_re($)
+sub get_first_line_re
 {
     my $self = shift;
     if (!exists $self->{FIRST_LINE_RE}) {
@@ -525,12 +502,12 @@ can be splitted on multiples lines.
 =cut
 
 # continue-style: first (only cont columns can appear on a continue line)
-sub get_continue_line_re($)
+sub get_continue_line_re
 {
     my $self = shift;
     if (!exists $self->{CONTINUE_LINE_RE}) {
 	my @re = $self->_build_continue_line_re(@{$self->{FORMAT}});
-	&_dump_line_re(@re);
+	#&_dump_line_re(@re);
 	my $re = &_serialize_line_re(@re);
 	$self->{CONTINUE_LINE_RE} = ($re eq '' ? undef : qr/^$re *$/);
     }
@@ -570,25 +547,44 @@ current name is already long enough!
 
 =back
 
-=head1 HISTORY
 
-2007-03-15 0.04 Removed debug statement. Thanks to Paulo Edgar Castro.
+=head1 SUPPORT
 
-2005-09-30 0.03 Added C<parse_table()> method.
+You can look for information at:
 
-2005-09-26 0.02 Added documentation.
+=over 4
 
-2005-09-25 0.01 Initial release on CPAN.
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Text-FixedLengthMultiline>:
+post bug report there.
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/p/Text-FixedLengthMultline>:
+if you use this distibution, please add comments on your experience for other
+users.
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Text-FixedLengthMultiline/>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Text-FixedLengthMultiline>
+
+=back
+
 
 =head1 LICENSE
 
-Copyright (c) 2005 Olivier Mengué. All rights reserved.
+Copyright (c) 2005-2010 Olivier MenguE<eacute>. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-Olivier Mengué, <dolmen@cpan.org>
+Olivier MenguE<eacute>, <dolmen@cpan.org>
 
 =head1 SEE ALSO
 
