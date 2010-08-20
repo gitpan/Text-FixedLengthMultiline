@@ -1,6 +1,6 @@
 NAME
     Text::FixedLengthMultiline - Parse text data formatted in space
-    separated columns optionnaly on multiple lines.
+    separated columns optionnaly on multiple lines
 
 SYNOPSIS
       use Text::FixedLengthMultiline;
@@ -43,10 +43,10 @@ FORMAT SPECIFICATION
     The array contains the ordered sequence of columns. Each colmun can
     either be:
 
-    *   A positive integer representing the size of a separating column
+    *   a positive integer representing the size of a separating column
         which is expected to always be filled with spaces.
 
-    *   A string that match this RE:
+    *   a string that matches this regexp:
         /^(?#mandatory)!?(?#name)[:alnum:]\w*(?:(?#multi)~(?#cont).?)?$/
 
         *   "!" means the column is mandatory

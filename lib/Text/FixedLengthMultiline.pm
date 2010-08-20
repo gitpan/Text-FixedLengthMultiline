@@ -1,15 +1,13 @@
 package Text::FixedLengthMultiline;
 
-require 5.6.0;
-
 use utf8;
 use strict;
-#use warnings; # Only for debugging
+use warnings;
 
 use Carp;
 
 BEGIN {
-    our $VERSION = '0.05';
+    our $VERSION = '0.06';
 }
 
 use constant FIRST => 1;
@@ -27,7 +25,7 @@ my %continue_styles = (
 
 =head1 NAME
 
-Text::FixedLengthMultiline - Parse text data formatted in space separated columns optionnaly on multiple lines.
+Text::FixedLengthMultiline - Parse text data formatted in space separated columns optionnaly on multiple lines
 
 =head1 SYNOPSIS
 
@@ -76,12 +74,12 @@ The array contains the ordered sequence of columns. Each colmun can either be:
 
 =item *
 
-A positive integer representing the size of a separating column which is
+a positive integer representing the size of a separating column which is
 expected to always be filled with spaces.
 
 =item *
 
-A string that match this RE: /^(?#mandatory)!?(?#name)[:alnum:]\w*(?:(?#multi)~(?#cont).?)?$/
+a string that matches this regexp: /^(?#mandatory)!?(?#name)[:alnum:]\w*(?:(?#multi)~(?#cont).?)?$/
 
 =over
 

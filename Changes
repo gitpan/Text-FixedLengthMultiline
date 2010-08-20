@@ -1,5 +1,10 @@
 Changes for Text::FixedLengthMultiline.
 
+0.06	2010-08-20
+	Fixed perl version in Build.PL.
+	Added 'use warnings'.
+	Minor POD fixes.
+
 0.05	2010-08-19
 	Imported old releases on Github from the BackPAN.
 	Removed an other debug print statement.

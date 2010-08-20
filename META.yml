@@ -1,5 +1,5 @@
 ---
-abstract: 'Parse text data formatted in space separated columns optionnaly on multiple lines.'
+abstract: 'Parse text data formatted in space separated columns optionnaly on multiple lines'
 author:
   - 'Olivier Mengue <dolmen@cpan.org>'
 configure_requires:
@@ -15,13 +15,13 @@ name: Text-FixedLengthMultiline
 provides:
   Text::FixedLengthMultiline:
     file: lib/Text/FixedLengthMultiline.pm
-    version: 0.05
+    version: 0.06
 requires:
   Carp: 0
   constant: 0
-  perl: v5.6.0
+  perl: 5.006
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Text-FixedLengthMultiline
   homepage: http://github.com/dolmen/Text-FixedLengthMultiline-perl
   repository: git://github.com/dolmen/Text-FixedLengthMultiline-perl.git
-version: 0.05
+version: 0.06

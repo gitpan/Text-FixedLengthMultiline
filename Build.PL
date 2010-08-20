@@ -13,7 +13,7 @@ Module::Build->new(
 	dist_author => 'Olivier Mengue <dolmen@cpan.org>',
 	license => 'perl',
 	requires => {
-		'perl' => '5.6.0',
+		'perl' => '5.006',
 		'Carp' => 0,
 		'constant' => 0,
 	},
