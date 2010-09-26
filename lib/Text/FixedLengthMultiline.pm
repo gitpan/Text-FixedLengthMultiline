@@ -7,7 +7,7 @@ use warnings;
 use Carp;
 
 BEGIN {
-    our $VERSION = '0.06';
+    our $VERSION = '0.07';
 }
 
 use constant FIRST => 1;
