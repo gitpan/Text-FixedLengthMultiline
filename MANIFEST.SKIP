@@ -48,3 +48,5 @@
 
 # Avoid archives of this distribution
 \bText-FixedLengthMultiline-[\d._]+
+\bDebian_CPANTS.txt$
+^$

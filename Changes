@@ -1,5 +1,8 @@
 Changes for Text::FixedLengthMultiline.
 
+0.071   2011-11-14
+	Add tests, just for Kwalitee.
+
 0.07    2010-09-26
 	No code change in the module.
 	Fixed t/03re.t following Perl 5.13.5 changes as reported by

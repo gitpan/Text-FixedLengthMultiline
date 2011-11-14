@@ -11,3 +11,7 @@ t/01new.t
 t/02parse.t
 t/03re.t
 t/04sample.t
+t/90-pod.t
+t/91-pod-coverage.t
+t/92-kwalitee.t
+META.json

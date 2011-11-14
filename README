@@ -49,58 +49,58 @@ FORMAT SPECIFICATION
     *   a string that matches this regexp:
         /^(?#mandatory)!?(?#name)[:alnum:]\w*(?:(?#multi)~(?#cont).?)?$/
 
-        *   "!" means the column is mandatory
+        *   `!' means the column is mandatory
 
-        *   "name" is the column name. This will be the key for the hash
+        *   `name' is the column name. This will be the key for the hash
             after parsing.
 
-        *   "~" means the column data can be on multiple lines.
+        *   `~' means the column data can be on multiple lines.
 
 METHODS
   new()
     Arguments:
 
-    *   "format": an array reference following the "FORMAT SPECIFICATION".
+    *   `format': an array reference following the FORMAT SPECIFICATION.
 
-    *   "debug"
+    *   `debug'
 
     Example:
 
       my $format = Text::FixedLengthMultiline->new(format => [ 2, col1 => 4, 1, '!col2' => 4 ]);
 
-  "parse_table($text)"
+  `parse_table($text)'
     Parse a table.
 
       my @table = $fmt->parse_table($text);
 
     Returns an array of hashes. Each hash is a row of data.
 
-  "parse_line($line, $hashref)"
+  `parse_line($line, $hashref)'
     Parse a line of text and add parsed data to the hash.
 
       my $error = $fmt->parse_line($line, \%row_data);
 
-    Multiple calls to "parse_line()" with the same hashref may be needed to
+    Multiple calls to `parse_line()' with the same hashref may be needed to
     fully read a "logical line" in case some columns are multiline.
 
     Returns:
 
-    *   "-col": Parse error. The value is a negative integer indicating the
+    *   `-col': Parse error. The value is a negative integer indicating the
         character position in the line where the parse error occured.
 
-    *   0: OK
+    *   `0': OK
 
-    *   "col": Missing data: need to feed next line to fill remining
+    *   `col': Missing data: need to feed next line to fill remining
         columns. The value is the character position of the column where
         data is expected.
 
-  "get_first_line_re()"
+  `get_first_line_re()'
     Returns a regular expression that matches the first line of a "logical
     line" of data.
 
       my $re = $fmt->get_first_line_re();
 
-  "get_continue_line_re()"
+  `get_continue_line_re()'
     Returns a regular expression that matches the 2nd line and the following
     lines of a "logical line".
 
@@ -110,9 +110,9 @@ METHODS
     that can be splitted on multiples lines.
 
 TODO
-    *   "format()"
+    *   `format()'
 
-    *   "to_sprintf()"
+    *   `to_sprintf()'
 
     *   See TODO sections in tests bundled with the distribution.
 
@@ -123,33 +123,29 @@ BUGS
 SUPPORT
     You can look for information at:
 
-    *   RT: CPAN's request tracker
+    * RT: CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Text-FixedLengthMultiline:
+        post bug report there.
 
-        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Text-FixedLengthMultiline>
-        : post bug report there.
-
-    *   CPAN Ratings
-
-        <http://cpanratings.perl.org/p/Text-FixedLengthMultline>: if you use
+    * CPAN Ratings
+        http://cpanratings.perl.org/p/Text-FixedLengthMultline: if you use
         this distibution, please add comments on your experience for other
         users.
 
-    *   Search CPAN
+    * Search CPAN
+        http://search.cpan.org/dist/Text-FixedLengthMultiline/
 
-        <http://search.cpan.org/dist/Text-FixedLengthMultiline/>
-
-    *   AnnoCPAN: Annotated CPAN documentation
-
-        <http://annocpan.org/dist/Text-FixedLengthMultiline>
+    * AnnoCPAN: Annotated CPAN documentation
+        http://annocpan.org/dist/Text-FixedLengthMultiline
 
 LICENSE
-    Copyright (c) 2005-2010 Olivier MenguÃ©. All rights reserved.
+    Copyright (c) 2005-2010 Olivier Mengué. All rights reserved.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
 
 AUTHOR
-    Olivier MenguÃ©, <dolmen@cpan.org>
+    Olivier Mengué, <dolmen@cpan.org>
 
 SEE ALSO
     Related modules I found on CPAN:
